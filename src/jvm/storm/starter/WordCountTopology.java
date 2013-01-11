@@ -66,8 +66,8 @@ public class WordCountTopology {
         TopologyBuilder builder = new TopologyBuilder();
         
         //builder.setSpout("spout", new RandomSentenceSpout(), 5);
-       SharedQueueWithBinding queueDeclaration = new SharedQueueWithBinding("logreader", "exchange-name", "exchange.key");
-        builder.setSpout("spout", new AMQPSpout("localhost", 5672, null, null, "/", (QueueDeclaration)queueDeclaration, (Scheme) new RawScheme()), 5);
+        SharedQueueWithBinding queueDeclaration = new SharedQueueWithBinding("flebado2", "khlejavee2", "#");
+        builder.setSpout("spout", new AMQPSpout("localhost", 5672, "guest", "guest", "/", (QueueDeclaration)queueDeclaration, (Scheme) new RawScheme()), 5);
         
         builder.setBolt("split", new SplitSentence(), 8)
                  .shuffleGrouping("spout");
