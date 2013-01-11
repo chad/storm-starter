@@ -12,6 +12,7 @@
 ;;                 [org.twitter4j/twitter4j-core "2.2.6-SNAPSHOT"]
 ;;                 [org.twitter4j/twitter4j-stream "2.2.6-SNAPSHOT"]
                    [commons-collections/commons-collections "3.2.1"]
+                   [com.rapportive/storm-amqp-spout "0.1.4"]
                  ]
 
   :dev-dependencies [[storm "0.8.2-wip18"]
