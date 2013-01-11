@@ -1,6 +1,8 @@
 package storm.starter;
 
-import storm.starter.spout.RandomSentenceSpout;
+//import storm.starter.spout.RandomSentenceSpout;
+import com.rapportive.storm.spout.*;
+import com.rapportive.storm.amqp.*;
 import backtype.storm.Config;
 import backtype.storm.LocalCluster;
 import backtype.storm.StormSubmitter;
@@ -14,6 +16,8 @@ import backtype.storm.topology.base.BaseBasicBolt;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
+import backtype.storm.spout.Scheme;
+import backtype.storm.spout.RawScheme;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,7 +65,9 @@ public class WordCountTopology {
         
         TopologyBuilder builder = new TopologyBuilder();
         
-        builder.setSpout("spout", new RandomSentenceSpout(), 5);
+        //builder.setSpout("spout", new RandomSentenceSpout(), 5);
+       SharedQueueWithBinding queueDeclaration = new SharedQueueWithBinding("logreader", "exchange-name", "exchange.key");
+        builder.setSpout("spout", new AMQPSpout("localhost", 5672, null, null, "/", (QueueDeclaration)queueDeclaration, (Scheme) new RawScheme()), 5);
         
         builder.setBolt("split", new SplitSentence(), 8)
                  .shuffleGrouping("spout");
