@@ -60,6 +60,7 @@ public class WordCountTopology {
             declarer.declare(new Fields("word", "count"));
         }
     }
+
     
     public static void main(String[] args) throws Exception {
         
@@ -67,7 +68,7 @@ public class WordCountTopology {
         
         //builder.setSpout("spout", new RandomSentenceSpout(), 5);
         SharedQueueWithBinding queueDeclaration = new SharedQueueWithBinding("flebado3", "khlejavee2", "#");
-        builder.setSpout("spout", new AMQPSpout("localhost", 5672, "guest", "guest", "/", (QueueDeclaration)queueDeclaration, (Scheme) new RawScheme()), 5);
+        builder.setSpout("spout", new AMQPSpout("localhost", 5672, "guest", "guest", "/", (QueueDeclaration)queueDeclaration, (Scheme) new MakeAStringThisIsDumb()), 5);
 
         //builder.setBolt("split", new SplitSentence(), 8)
                  //.shuffleGrouping("spout");
