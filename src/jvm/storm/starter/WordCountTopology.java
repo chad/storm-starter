@@ -48,6 +48,7 @@ public class WordCountTopology {
         @Override
         public void execute(Tuple tuple, BasicOutputCollector collector) {
             String word = tuple.getString(0);
+System.out.println("OMG!!!! " + word);
             Integer count = counts.get(word);
             if(count==null) count = 0;
             count++;
@@ -66,20 +67,15 @@ public class WordCountTopology {
         
         TopologyBuilder builder = new TopologyBuilder();
         
-        //builder.setSpout("spout", new RandomSentenceSpout(), 5);
         SharedQueueWithBinding queueDeclaration = new SharedQueueWithBinding("flebado3", "khlejavee2", "#");
         builder.setSpout("spout", new AMQPSpout("localhost", 5672, "guest", "guest", "/", (QueueDeclaration)queueDeclaration, (Scheme) new MakeAStringThisIsDumb()), 5);
 
-        //builder.setBolt("split", new SplitSentence(), 8)
-                 //.shuffleGrouping("spout");
-        //builder.setBolt("count", new WordCount(), 12)
-                 //.fieldsGrouping("split", new Fields("word"));
         
         builder.setBolt("count", new WordCount(), 12)
                  .shuffleGrouping("spout");
 
         Config conf = new Config();
-        conf.setDebug(true);
+        //conf.setDebug(true);
 
         
         if(args!=null && args.length > 0) {
