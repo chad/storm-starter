@@ -26,7 +26,7 @@ import java.util.Map;
  */
 public class WordCountTopology {
     public static class SplitSentence extends ShellBolt implements IRichBolt {
-        
+
         public SplitSentence() {
             super("python", "splitsentence.py");
         }
@@ -40,8 +40,8 @@ public class WordCountTopology {
         public Map<String, Object> getComponentConfiguration() {
             return null;
         }
-    }  
-    
+    }
+
     public static class WordCount extends BaseBasicBolt {
         Map<String, Integer> counts = new HashMap<String, Integer>();
 
@@ -62,35 +62,35 @@ System.out.println("OMG!!!! " + word);
         }
     }
 
-    
+
     public static void main(String[] args) throws Exception {
-        
+
         TopologyBuilder builder = new TopologyBuilder();
-        
+
         SharedQueueWithBinding queueDeclaration = new SharedQueueWithBinding("flebado3", "khlejavee2", "#");
         builder.setSpout("spout", new AMQPSpout("localhost", 5672, "guest", "guest", "/", (QueueDeclaration)queueDeclaration, (Scheme) new MakeAStringThisIsDumb()), 5);
 
-        
+
         builder.setBolt("count", new WordCount(), 12)
                  .shuffleGrouping("spout");
 
         Config conf = new Config();
         //conf.setDebug(true);
 
-        
+
         if(args!=null && args.length > 0) {
             conf.setNumWorkers(3);
-            
+
             StormSubmitter.submitTopology(args[0], conf, builder.createTopology());
-        } else {        
+        } else {
             conf.setMaxTaskParallelism(3);
 
             LocalCluster cluster = new LocalCluster();
             cluster.submitTopology("word-count", conf, builder.createTopology());
-        
-            Thread.sleep(10000);
 
-            cluster.shutdown();
+            //Thread.sleep(10000);
+
+//            cluster.shutdown();
         }
     }
 }
